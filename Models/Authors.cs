@@ -7,21 +7,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APILibrary.Models;
 
-[Table("Books")]
-public class Book
+[Table("Authors")]
+    public class Author
 {
     [Key]
-    public int BookId { get; set; }
+    public int AuthorId { get; set; }
     [Required]
     [StringLength(80)]
-    public string Title { get; set; }
+    public string Name { get; set; }
     [Required]
     [StringLength(300)]
-    public Author Author { get; set; }
-  
+    public ICollection<Book> Books { get; set; }
+
     public override string ToString()
     {
-        return $"({Title}{Author})";
+        return Name;
     }
-
 }

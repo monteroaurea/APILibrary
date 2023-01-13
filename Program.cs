@@ -1,5 +1,24 @@
-using System;
-using System.Collections.Generic;
+using APILibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<ILibraryRepository, DbRepository>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<LibraryContext>(options =>
+    options.UseMySql(mySqlConnection,
+    ServerVersion.AutoDetect(mySqlConnection)));
+
+var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
+app.Run();
 
 namespace APILibrary
 {
@@ -58,6 +77,11 @@ namespace APILibrary
         }
         static void Main()
         {
+
+            using var db = new LibraryContext(Options);
+
+            db.Database.EnsureCreated
+
             var authors = LibraryBooks();
 
             foreach (var author in authors)
